@@ -4,6 +4,9 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const {NODE_ENV} = require('./config');
+const {CLIENT_ORIGIN} = require('./config')
+const authRouter = require('./auth/auth-router')
+const signUpRouter = require('./signUp/signUp-router')
 
 const app = express();
 
@@ -12,22 +15,25 @@ const morganSetting = (NODE_ENV === 'production')
     : 'dev';
 
     app.use(morgan(morganSetting));
-    app.use(cors());
+    app.use(cors({
+        origin: CLIENT_ORIGIN
+    }));
     app.use(helmet());
 
-    app.get('/', (req, res) => {
-        res.send('Hello, world')
-    })
+    app.use('/api/auth', authRouter)
+
+    app.use('/api/signup', signUpRouter)
 
     app.use(function errorHandler(error, req, res, next) {
         let response;
+        console.log(error)
         if (NODE_ENV === 'production') {
-            repsonse = {error: {message: 'server error'}}
+            response = {error: {message: 'server error'}}
         }
         else {
             response = {error}
         }
-        res.status(500).json(reponse)
+        res.status(500).json(response)
     })
 
     module.exports = app;
