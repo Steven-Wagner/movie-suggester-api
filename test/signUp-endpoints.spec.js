@@ -72,7 +72,7 @@ describe('signup Endpoints', function() {
             })
         })
         context('happy path', () => {
-            it.only('responds with 200, new user_id, and new user is added to users table', () => {
+            it('responds with 201, new user_id, and new user is added to users table', () => {
                 
                 return request(app)
                 .post('/api/signup')

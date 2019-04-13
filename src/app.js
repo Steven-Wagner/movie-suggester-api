@@ -7,6 +7,7 @@ const {NODE_ENV} = require('./config');
 const {CLIENT_ORIGIN} = require('./config')
 const authRouter = require('./auth/auth-router')
 const signUpRouter = require('./signUp/signUp-router')
+const friendRouter = require('./friend/friend-router')
 
 const app = express();
 
@@ -23,6 +24,8 @@ const morganSetting = (NODE_ENV === 'production')
     app.use('/api/auth', authRouter)
 
     app.use('/api/signup', signUpRouter)
+
+    app.use('/api/friend', friendRouter)
 
     app.use(function errorHandler(error, req, res, next) {
         let response;

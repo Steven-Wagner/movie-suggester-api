@@ -37,6 +37,26 @@ function makeUsersArray() {
     ]
 }
 
+function makeFollowersArray() {
+    return [
+        {
+        id: 1,
+        follower_id: 1,
+        friend_id: 2
+        },
+        {
+        id: 2,
+        follower_id: 1,
+        friend_id: 3
+        },
+        {
+        id: 3,
+        follower_id: 2,
+        friend_id: 4
+        },
+    ]
+}
+
 function makeArticlesFixtures() {
     const testUsers = makeUsersArray()
     return { testUsers }
@@ -45,7 +65,8 @@ function makeArticlesFixtures() {
 function cleanTables(db) {
     return db.raw(
       `TRUNCATE
-        movie_suggester_users
+        movie_suggester_users,
+        movie_suggester_follows
         RESTART IDENTITY CASCADE`
     )
 }
@@ -59,6 +80,12 @@ function seedUsers(db, users) {
       .into('movie_suggester_users')
       .insert(preppedUsers)
   }
+
+function seedFollowers(db, followers) {
+    return db
+        .into('movie_suggester_follows')
+        .insert(followers)
+}
 
 function newUser() {
     return {
@@ -75,6 +102,8 @@ module.exports = {
     cleanTables,
     seedUsers,
     newUser,
+    makeFollowersArray,
+    seedFollowers,
 
     makeArticlesFixtures
 }
