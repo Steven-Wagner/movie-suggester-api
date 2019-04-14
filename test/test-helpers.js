@@ -86,6 +86,26 @@ function makeMoviesArray() {
     ]
 }
 
+function makeIgnoresArray() {
+    return [
+        {
+        user_id: 1,
+        movie_id: 1,
+        ignore: 'watched_it'
+        },
+        {
+        user_id: 2,
+        movie_id: 2,
+        ignore: 'not_intrested'
+        },
+        {
+        user_id: 3,
+        movie_id: 3,
+        ignore: 'watched_it'
+        },
+    ]
+}
+
 function makeArticlesFixtures() {
     const testUsers = makeUsersArray()
     return { testUsers }
@@ -97,9 +117,17 @@ function cleanTables(db) {
         movie_suggester_users,
         movie_suggester_follows,
         movie_suggester_movie_ratings,
-        movie_suggester_movies
+        movie_suggester_movies,
+        movie_suggester_movies_to_ignore
         RESTART IDENTITY CASCADE`
     )
+}
+
+function seedIgnores(db, ignores) {
+    console.log('db', db)
+    return db
+        .into('movie_suggester_movies_to_ignore')
+        .insert(ignores)
 }
 
 function seedUsers(db, users) {
@@ -143,6 +171,8 @@ module.exports = {
     makeMoviesArray,
     seedFollowers,
     seedMovies,
+    makeIgnoresArray,
+    seedIgnores,
 
     makeArticlesFixtures
 }

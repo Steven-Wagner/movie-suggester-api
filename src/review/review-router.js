@@ -1,5 +1,6 @@
 const express = require('express')
 const reviewService = require('./review-service')
+const service = require('../util/services')
 const fetch = require('node-fetch')
 
 const reviewRouter = express.Router()
@@ -21,7 +22,7 @@ reviewRouter
         }
 
         //Does user_id exist?
-        reviewService.checkUserId(
+        service.checkUserId(
             req.app.get('db'),
             user_id
         )
@@ -55,7 +56,7 @@ reviewRouter
                     })
                 }
 
-                reviewService.getMovieId(
+                reviewService.getMovieIdByTitle(
                     req.app.get('db'),
                     title
                 )
@@ -100,19 +101,6 @@ reviewRouter
             })
             .catch(next)
         })
-
-        //title exists? - api call
-            //Get release_year, director, img, imdb_id
-
-        
-
-        //is title in DB already
-            //if true : add movie_id to newReview
-            //if false: add movie to movie table with API data and return id
-                //add movie_id to newReview
-
-        
-
     })
 
     module.exports = reviewRouter

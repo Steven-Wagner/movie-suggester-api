@@ -1,13 +1,5 @@
 reviewService = {
-    checkUserId(db, user_id) {
-        return db
-            .from('movie_suggester_users')
-            .select('id')
-            .where('id', user_id)
-            .first()
-    },
-
-    getMovieId(db, title) {
+    getMovieIdByTitle(db, title) {
         return db
             .from('movie_suggester_movies')
             .select('id')
