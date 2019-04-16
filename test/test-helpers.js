@@ -106,6 +106,67 @@ function makeIgnoresArray() {
     ]
 }
 
+function makeRatingsArray() {
+    return [
+        {
+        id: 1,
+        user_id: 1,
+        movie_id: 1,
+        star_rating: 3
+        },
+        {
+        id: 2,
+        user_id: 2,
+        movie_id: 1,
+        star_rating: 5
+        },
+
+        {
+        id: 4,
+        user_id: 1,
+        movie_id: 2,
+        star_rating: 1
+        },
+        {
+        id: 5,
+        user_id: 2,
+        movie_id: 2,
+        star_rating: 5
+        },
+        {
+        id: 6,
+        user_id: 1,
+        movie_id: 2,
+        star_rating: 5
+        },
+
+        {
+        id: 7,
+        user_id: 1,
+        movie_id: 3,
+        star_rating: 2
+        },
+        {
+        id: 8,
+        user_id: 2,
+        movie_id: 3,
+        star_rating: 3
+        },
+        {
+        id: 9,
+        user_id: 3,
+        movie_id: 3,
+        star_rating: 4
+        },
+    ]
+}
+
+function seedRatings(db, ratings) {
+    return db
+        .into('movie_suggester_movie_ratings')
+        .insert(ratings)
+}
+
 function makeArticlesFixtures() {
     const testUsers = makeUsersArray()
     return { testUsers }
@@ -173,6 +234,8 @@ module.exports = {
     seedMovies,
     makeIgnoresArray,
     seedIgnores,
+    makeRatingsArray,
+    seedRatings,
 
     makeArticlesFixtures
 }

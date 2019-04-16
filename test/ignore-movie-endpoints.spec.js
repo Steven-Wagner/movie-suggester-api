@@ -84,7 +84,7 @@ describe('Review Endpoints', function() {
             })
         })
 
-        context.only(`happy path`, () => {
+        context(`happy path`, () => {
 
             const testIgnores = helpers.makeIgnoresArray()
 

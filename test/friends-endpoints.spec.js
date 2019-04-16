@@ -7,6 +7,7 @@ describe('Friend Endpoints', function() {
     let db
 
     const followers = helpers.makeFollowersArray()
+    const testUsers =  helpers.makeUsersArray()
 
     before('make knex instance', () => {
         db = knex({
@@ -24,8 +25,6 @@ describe('Friend Endpoints', function() {
 
     describe('POST /api/friend', () => {
 
-        const testUsers =  helpers.makeUsersArray()
-
         beforeEach('insert users', () => 
             helpers.seedUsers(
                 db,
@@ -37,7 +36,7 @@ describe('Friend Endpoints', function() {
                 db,
                 followers
         )
-    )
+        )
 
         context('bad requests', () => {
 
@@ -125,6 +124,59 @@ describe('Friend Endpoints', function() {
                         expect(dbFollow.friend_id).to.eql(4)
                     })
             })
+        })
+    })
+    describe(`GET /api/friend/suggestions`, () => {
+
+        beforeEach('insert users', async function() { 
+            await helpers.seedUsers(
+                db,
+                testUsers
+            )
+        }
+        )
+
+        beforeEach('insert followers', async function() {
+            await helpers.seedFollowers(
+                db,
+                followers
+            )
+        }
+        )
+
+        const testRatings = helpers.makeRatingsArray()
+        const testMovies = helpers.makeMoviesArray()
+
+        beforeEach('insert movies', async function() {
+            await helpers.seedMovies(
+                db,
+                testMovies
+            )
+        }
+        )
+        
+        beforeEach('insert ratings', async function() {
+            await helpers.seedRatings(
+                db,
+                testRatings
+            )
+        }
+        )
+
+        it('responds 400 invaild user_id', () => {
+            const invalidUserId = testUsers.length+1
+
+            return request(app)
+            .get(`/api/friend/suggestions/${invalidUserId}`)
+            .expect(400, {error: `Invalid user_id`})
+        })
+        
+        it.only('happy path responds 200 and friend suggestions', () => {
+            const testUserId = 2
+
+            return request(app)
+            .get(`/api/friend/suggestions/${testUserId}`)
+            .expect(200, { '1': 2, '3': 1 })
         })
     })
 })

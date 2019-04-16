@@ -47,7 +47,7 @@ describe('Review Endpoints', function() {
                     delete newReviewBody[field]
 
                     return request(app)
-                    .post('/api/review')
+                    .post(`/api/review/${newReviewBody.user_id}`)
                     .send(newReviewBody)
                     .expect(400, {
                         error: `${field} is required`
@@ -63,7 +63,7 @@ describe('Review Endpoints', function() {
                 }
 
                 return request(app)
-                    .post('/api/review')
+                    .post(`/api/review/${badUserId.user_id}`)
                     .send(badUserId)
                     .expect(400, {
                         error: `Invalid user_id`
@@ -83,7 +83,7 @@ describe('Review Endpoints', function() {
                     it(`responds 400 when star_rating is ${rating}`, () => {
 
                         return request(app)
-                            .post('/api/review')
+                            .post(`/api/review/${badUserId.user_id}`)
                             .send(badUserId)
                             .expect(400, {
                                 error: `Rating must be 1-5 stars`
@@ -99,7 +99,7 @@ describe('Review Endpoints', function() {
                 }
 
                 return request(app)
-                    .post('/api/review')
+                    .post(`/api/review/${badTitle.user_id}`)
                     .send(badTitle)
                     .expect(400, {
                         error: 'Title does not exist'
@@ -126,7 +126,7 @@ describe('Review Endpoints', function() {
                 }
 
                 return request(app)
-                    .post('/api/review')
+                    .post(`/api/review/${newMovie.user_id}`)
                     .send(newMovie)
                     .then(() => {
                         return db
@@ -144,7 +144,7 @@ describe('Review Endpoints', function() {
             
             it(`Movie review is added to ratings table`, () => {
                 return request(app)
-                .post('/api/review')
+                .post(`/api/review/${newMovie.user_id}`)
                 .send(newMovie)
                 .expect(201)
                 .then(res => {
@@ -183,7 +183,7 @@ describe('Review Endpoints', function() {
             it(`Movie review is added to ratings table`, () => {
 
                 return request(app)
-                .post('/api/review')
+                .post(`/api/review/${ratingOfMovieInDB.user_id}`)
                 .send(ratingOfMovieInDB)
                 .expect(201)
                 .then(res => {
@@ -203,7 +203,7 @@ describe('Review Endpoints', function() {
 
             it(`There are no duplicate titles in movie table`, () => {
                 return request(app)
-                .post('/api/review')
+                .post(`/api/review/${ratingOfMovieInDB.user_id}`)
                 .send(ratingOfMovieInDB)
                 .expect(201)
                 .then(() => {

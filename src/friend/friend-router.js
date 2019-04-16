@@ -1,12 +1,14 @@
 const express = require('express')
 const friendService = require('./friend-service')
+const checkUserIdExists = require('../async-services/async-service')
+const getFriendSuggestions = require('../friend-suggestions/get-friend-suggestions')
 
 const friendRouter = express.Router()
 const jsonBodyParser = express.json()
 
 friendRouter
     .post('', jsonBodyParser, (req, res, next) => {
-        console.log('got to friend post')
+        
         const {follower_id, friend_id} = req.body
         const newFollowing = {follower_id, friend_id}
 
@@ -30,13 +32,12 @@ friendRouter
             friend_id
         )
         .then(alreadyFriends => {
-            console.log('alreadyFriends', alreadyFriends)
+            
             if (alreadyFriends) {
                 return res.status(400).json({
                     error: `Already friends with ${alreadyFriends.friend_id}`
                 })
             }
-            console.log('adding new follow')
 
             //add to database
             friendService.addFollow(
@@ -44,11 +45,25 @@ friendRouter
                 newFollowing
             )
             .then(newFollow => {
-                console.log(newFollow)
                 return res.status(201).json(newFollow)
             })
         })
         .catch(next)
     })
+
+friendRouter
+    .route('/suggestions/:user_id')
+    .all(checkUserIdExists)
+    .get((req, res) => {
+        getFriendSuggestions(
+            req.app.get('db'),
+            req.params.user_id)
+        .then(friendSuggestions => {
+            console.log('friend suggestions', friendSuggestions)
+            return res.status(200).json(friendSuggestions)
+        })
+    })
+
+
 
 module.exports = friendRouter
