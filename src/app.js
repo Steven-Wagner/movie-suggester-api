@@ -10,6 +10,7 @@ const signUpRouter = require('./signUp/signUp-router')
 const friendRouter = require('./friend/friend-router')
 const reviewRouter = require('./review/review-router')
 const ignoreRouter = require('./ignore-movie/ignore-movie-router')
+const movieSuggestionsRouter = require('./movie-suggestions/movie-suggestions-router')
 
 const app = express();
 
@@ -32,6 +33,8 @@ const morganSetting = (NODE_ENV === 'production')
     app.use('/api/review', reviewRouter)
 
     app.use('/api/ignore', ignoreRouter)
+
+    app.use('/api/moviesuggestions', movieSuggestionsRouter)
 
     app.use(function errorHandler(error, req, res, next) {
         let response;

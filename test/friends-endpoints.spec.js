@@ -50,7 +50,6 @@ describe('Friend Endpoints', function() {
                 it('responds 400 when required field is missing', () => {
 
                     delete newFriendRequestBody[field]
-                    console.log('testing')
 
                     return request(app)
                     .post('/api/friend')
@@ -171,7 +170,7 @@ describe('Friend Endpoints', function() {
             .expect(400, {error: `Invalid user_id`})
         })
         
-        it.only('happy path responds 200 and friend suggestions', () => {
+        it('happy path responds 200 and friend suggestions', () => {
             const testUserId = 2
 
             return request(app)

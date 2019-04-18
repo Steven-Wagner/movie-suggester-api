@@ -54,6 +54,17 @@ function makeFollowersArray() {
         follower_id: 2,
         friend_id: 4
         },
+        {
+        id: 4,
+        follower_id: 3,
+        friend_id: 1
+        },
+        {
+        id: 5,
+        follower_id: 3,
+        friend_id: 2
+        },
+
     ]
 }
 
@@ -185,7 +196,6 @@ function cleanTables(db) {
 }
 
 function seedIgnores(db, ignores) {
-    console.log('db', db)
     return db
         .into('movie_suggester_movies_to_ignore')
         .insert(ignores)

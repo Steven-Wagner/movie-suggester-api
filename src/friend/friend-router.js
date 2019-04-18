@@ -59,7 +59,6 @@ friendRouter
             req.app.get('db'),
             req.params.user_id)
         .then(friendSuggestions => {
-            console.log('friend suggestions', friendSuggestions)
             return res.status(200).json(friendSuggestions)
         })
     })
