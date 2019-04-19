@@ -20,7 +20,8 @@ ignoreRouter
         }
 
         //is ignore valid?
-        if (ignore !== 'watched_it' && ignore !== 'not_intrested') {
+        console.log('ignore', ignore)
+        if (ignore !== 'watched_it' && ignore !== 'not_interested') {
             return res.status(400).json({
                 error: `Invalid ignore`
             })

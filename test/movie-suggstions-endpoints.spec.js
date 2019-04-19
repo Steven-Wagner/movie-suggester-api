@@ -3,7 +3,7 @@ const app = require('../src/app')
 const helpers = require('./test-helpers')
 const expectedSuggestedMovies = require('./expected-suggested-movies')
 
-describe('Friend Endpoints', function() {
+describe('movie-suggestions Endpoints', function() {
     let db
 
     const followers = helpers.makeFollowersArray()
@@ -23,7 +23,7 @@ describe('Friend Endpoints', function() {
 
     afterEach('cleanup', () => helpers.cleanTables(db))
 
-    describe(`GET /api/friend/suggestions/:user_id`, () => {
+    describe(`GET /api/moviesuggestions/:user_id`, () => {
 
         beforeEach('insert users', async function() { 
             await helpers.seedUsers(
@@ -64,7 +64,7 @@ describe('Friend Endpoints', function() {
             const invalidUserId = testUsers.length+1
 
             return request(app)
-            .get(`/api/friend/suggestions/${invalidUserId}`)
+            .get(`/api/moviesuggestions/${invalidUserId}`)
             .expect(400, {error: `Invalid user_id`})
         })
         
