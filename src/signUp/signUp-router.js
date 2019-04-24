@@ -1,5 +1,6 @@
 const express = require('express')
 const SignUpService = require('./signUp-service')
+const AuthService = require('../auth/auth-service')
 
 const signUpRouter = express.Router()
 const jsonBodyParser = express.json()
@@ -41,8 +42,11 @@ signUpRouter
                     newUser
                 )
                 .then(newId => {
-                    return res.status(201).json({
-                        id: newId
+                    const sub = newUser.username
+                    const payload = {user_id: newId}
+                    return res.status(201).send({
+                    authToken: AuthService.createJwt(sub, payload),
+                    user_id: newId
                     })
                 })
             })

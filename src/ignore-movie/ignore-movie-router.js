@@ -1,12 +1,15 @@
 const express = require('express')
 const ignoreService = require('./ignore-movie-service')
 const service = require('../util/services')
+const {requireAuth} = require('../middleware/jwt-auth')
 
 const ignoreRouter = express.Router()
 const jsonBodyParser = express.json()
 
 ignoreRouter
-    .post('', jsonBodyParser, (req, res, next) => {
+    .route('/:user_id')
+    .all(requireAuth)
+    .post(jsonBodyParser, (req, res, next) => {
    
         const {user_id, movie_id, ignore} = req.body
         const newMovieToIgnore = {user_id, movie_id, ignore}

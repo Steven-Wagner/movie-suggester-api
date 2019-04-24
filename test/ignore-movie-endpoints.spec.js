@@ -44,9 +44,9 @@ describe('Review Endpoints', function() {
 
             requiredFields.forEach(field => {
                 const newIgnoreBody = {
-                    user_id: testUsers.length+1,
-                    movie_id: testMovies.length+1,
-                    ignore: 'wrong_thing'
+                    user_id: 1,
+                    movie_id: testMovies[0],
+                    ignore: 'watched_it'
                 }
 
                 it(`responds 400 when required ${field} is missing`, () => {
@@ -54,7 +54,8 @@ describe('Review Endpoints', function() {
                     delete newIgnoreBody[field]
 
                     return request(app)
-                    .post('/api/ignore')
+                    .post(`/api/ignore/1`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(newIgnoreBody)
                     .expect(400, {
                         error: `${field} is required`
@@ -75,7 +76,8 @@ describe('Review Endpoints', function() {
                 it(`responds 400 when ${field} is invalid`, () => {
 
                     return request(app)
-                    .post('/api/ignore')
+                    .post(`/api/ignore/1`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(newIgnoreBody)
                     .expect(400, {
                         error: `Invalid ${field}`
@@ -101,7 +103,8 @@ describe('Review Endpoints', function() {
             it(`Responds 201 with ignore id`, () => {
                 
                 return request(app)
-                .post('/api/ignore')
+                .post(`/api/ignore/${happyIgnoreBody.user_id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[happyIgnoreBody.user_id-1]))
                 .send(happyIgnoreBody)
                 .expect(201, {
                     id: testIgnores.length+1
@@ -111,7 +114,8 @@ describe('Review Endpoints', function() {
             it(`Responds 201 and ignore data is added to database`, () => {
                 
                 return request(app)
-                .post('/api/ignore')
+                .post(`/api/ignore/${happyIgnoreBody.user_id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[happyIgnoreBody.user_id-1]))
                 .send(happyIgnoreBody)
                 .expect(201)
                 .then(newIgnore => {

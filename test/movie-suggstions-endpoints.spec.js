@@ -73,6 +73,7 @@ describe('movie-suggestions Endpoints', function() {
 
             return request(app)
             .get(`/api/moviesuggestions/${testUserId}`)
+            .set('Authorization', helpers.makeAuthHeader(testUsers[testUserId-1]))
             .expect(200, expectedSuggestedMovies)
         })
         
@@ -81,6 +82,7 @@ describe('movie-suggestions Endpoints', function() {
 
             return request(app)
             .get(`/api/moviesuggestions/${testUserId}`)
+            .set('Authorization', helpers.makeAuthHeader(testUsers[testUserId-1]))
             .expect(200, [])
         })
     })

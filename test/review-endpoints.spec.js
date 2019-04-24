@@ -48,6 +48,7 @@ describe('Review Endpoints', function() {
 
                     return request(app)
                     .post(`/api/review/${newReviewBody.user_id}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(newReviewBody)
                     .expect(400, {
                         error: `${field} is required`
@@ -64,6 +65,7 @@ describe('Review Endpoints', function() {
 
                 return request(app)
                     .post(`/api/review/${badUserId.user_id}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(badUserId)
                     .expect(400, {
                         error: `Invalid user_id`
@@ -84,6 +86,7 @@ describe('Review Endpoints', function() {
 
                         return request(app)
                             .post(`/api/review/${badUserId.user_id}`)
+                            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                             .send(badUserId)
                             .expect(400, {
                                 error: `Rating must be 1-5 stars`
@@ -100,9 +103,77 @@ describe('Review Endpoints', function() {
 
                 return request(app)
                     .post(`/api/review/${badTitle.user_id}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(badTitle)
                     .expect(400, {
                         error: 'Title does not exist'
+                })
+            })
+
+            context('duplicate review post', () => {
+
+                const testMovies = helpers.makeMoviesArray();
+                const testReviews = helpers.makeRatingsArray();
+
+                console.log('testrex', testReviews)
+        
+
+                beforeEach('insert movies', async function() { 
+                    await helpers.seedMovies(
+                        db,
+                        testMovies
+                    )
+                })
+                beforeEach('insert reviews', async function() { 
+                    await helpers.seedRatings(
+                        db,
+                        testReviews
+                    )
+                })
+                
+                it(`responds 409 when user has alreasy reviewed the movie`, () => {
+
+                    const duplicateReview = Object.assign({}, testReviews[0])
+                    duplicateReview.star_rating = duplicateReview.star_rating+1
+                    duplicateReview.title = 'Jaws'
+
+                    return request(app)
+                    .post(`/api/review/${duplicateReview.user_id}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                    .send(duplicateReview)
+                    .expect(409, { error:
+                        'This movie has already been reviewed',
+                       movie_id: 1 })
+                    .then(res => {
+                        console.log(res.body)
+                    })
+                })
+                
+                it(`responds 409 when user has alreasy reviewed the movie and new review is not inserted into ratings table`, () => {
+
+                    const duplicateReview = Object.assign({},testReviews[0])
+                    console.log('dupl', duplicateReview)
+                    duplicateReview.star_rating = duplicateReview.star_rating+1
+                    duplicateReview.title = 'Jaws'
+
+                    return request(app)
+                    .post(`/api/review/${duplicateReview.user_id}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                    .send(duplicateReview)
+                    .expect(409, { error:
+                        'This movie has already been reviewed',
+                       movie_id: 1 })
+                    .then(res => {
+                        return db
+                            .from('movie_suggester_movie_ratings')
+                            .select('*')
+                            .where('user_id', duplicateReview.user_id)
+                            .where('movie_id', res.body.movie_id)
+                            .first()
+                            .then(movieRating => {
+                                expect(movieRating.star_rating).to.eql(duplicateReview.star_rating-1)
+                            })
+                    })
                 })
             })
         })
@@ -127,6 +198,7 @@ describe('Review Endpoints', function() {
 
                 return request(app)
                     .post(`/api/review/${newMovie.user_id}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(newMovie)
                     .then(() => {
                         return db
@@ -145,6 +217,7 @@ describe('Review Endpoints', function() {
             it(`Movie review is added to ratings table`, () => {
                 return request(app)
                 .post(`/api/review/${newMovie.user_id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                 .send(newMovie)
                 .expect(201)
                 .then(res => {
@@ -163,7 +236,7 @@ describe('Review Endpoints', function() {
             })
         })
 
-        describe(`POST a review of a movie that is already in the database`, () => {
+        describe(`POST a review`, () => {
             
             const testMovies = helpers.makeMoviesArray()
             
@@ -184,6 +257,7 @@ describe('Review Endpoints', function() {
 
                 return request(app)
                 .post(`/api/review/${ratingOfMovieInDB.user_id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                 .send(ratingOfMovieInDB)
                 .expect(201)
                 .then(res => {
@@ -201,9 +275,31 @@ describe('Review Endpoints', function() {
                 })
             })
 
+            it(`Movie is added to ignore table with watched_it`, () => {
+
+                return request(app)
+                .post(`/api/review/${ratingOfMovieInDB.user_id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .send(ratingOfMovieInDB)
+                .expect(201)
+                .then(res => {
+                    return db 
+                        .from('movie_suggester_movies_to_ignore')
+                        .where('id', 1)
+                        .select('*')
+                        .first()
+                        .then(ignoreData => {
+                            expect(ignoreData.user_id).to.eql(ratingOfMovieInDB.user_id)
+                            expect(ignoreData.ignore).to.eql('watched_it')
+                            expect(ignoreData.movie_id).to.eql(1)
+                        })
+                })
+            })
+
             it(`There are no duplicate titles in movie table`, () => {
                 return request(app)
                 .post(`/api/review/${ratingOfMovieInDB.user_id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                 .send(ratingOfMovieInDB)
                 .expect(201)
                 .then(() => {

@@ -2,12 +2,16 @@ const express = require('express')
 const friendService = require('./friend-service')
 const checkUserIdExists = require('../async-services/async-service')
 const getFriendSuggestions = require('../friend-suggestions/get-friend-suggestions')
+const {requireAuth} = require('../middleware/jwt-auth')
 
 const friendRouter = express.Router()
 const jsonBodyParser = express.json()
 
 friendRouter
-    .post('', jsonBodyParser, (req, res, next) => {
+    .route('/:user_id')
+    .all(checkUserIdExists)
+    .all(requireAuth)
+    .post(jsonBodyParser, (req, res, next) => {
         
         const {follower_id, friend_id} = req.body
         const newFollowing = {follower_id, friend_id}
@@ -54,6 +58,7 @@ friendRouter
 friendRouter
     .route('/suggestions/:user_id')
     .all(checkUserIdExists)
+    .all(requireAuth)
     .get((req, res) => {
         getFriendSuggestions(
             req.app.get('db'),

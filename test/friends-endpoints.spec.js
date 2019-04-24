@@ -1,7 +1,6 @@
 const knex = require('knex')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
-const jwt = require('jsonwebtoken')
 
 describe('Friend Endpoints', function() {
     let db
@@ -47,12 +46,13 @@ describe('Friend Endpoints', function() {
                     follower_id: 1,
                     friend_id: 2
                 }
-                it('responds 400 when required field is missing', () => {
+                it(`responds 400 when required ${field} is missing`, () => {
 
                     delete newFriendRequestBody[field]
 
                     return request(app)
-                    .post('/api/friend')
+                    .post(`/api/friend/1`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(newFriendRequestBody)
                     .expect(400, {
                         error: `${field} is required`
@@ -68,7 +68,8 @@ describe('Friend Endpoints', function() {
                 }
 
                 return request(app)
-                .post('/api/friend')
+                .post(`/api/friend/${newFriendRequestBody.follower_id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[newFriendRequestBody.follower_id-1]))
                 .send(newFriendRequestBody)
                 .expect(400, {
                     error: `Invalid friend_id`
@@ -81,7 +82,8 @@ describe('Friend Endpoints', function() {
                 const alreadyFriends = followers[0]
 
                 return request(app)
-                .post('/api/friend')
+                .post(`/api/friend/${alreadyFriends.follower_id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[alreadyFriends.follower_id-1]))
                 .send(alreadyFriends)
                 .expect(400, {
                     error: `Already friends with ${alreadyFriends.friend_id}`
@@ -106,7 +108,8 @@ describe('Friend Endpoints', function() {
             }
 
             return request(app)
-            .post('/api/friend')
+            .post(`/api/friend/${newFollow.follower_id}`)
+            .set('Authorization', helpers.makeAuthHeader(testUsers[newFollow.follower_id-1]))
             .send(newFollow)
             .expect(201)
             .expect(res => {
@@ -175,7 +178,16 @@ describe('Friend Endpoints', function() {
 
             return request(app)
             .get(`/api/friend/suggestions/${testUserId}`)
-            .expect(200, { '1': 2, '3': 1 })
+            .set('Authorization', helpers.makeAuthHeader(testUsers[testUserId-1]))
+            .expect(200, 
+                [ { match_score: '2',
+                    user_id: 1,
+                    bio: 'A test bio',
+                    username: 'dunder' },
+                  { match_score: '1', 
+                    user_id: 3,
+                    bio: '', 
+                    username: 's.smith' } ])
         })
     })
 })

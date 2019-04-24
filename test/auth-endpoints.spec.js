@@ -3,10 +3,10 @@ const app = require('../src/app')
 const helpers = require('./test-helpers')
 const jwt = require('jsonwebtoken')
 
-describe('Auth Endpoints', function() {
+describe.only('Auth Endpoints', function() {
     let db
 
-    const { testUsers } = helpers.makeArticlesFixtures()
+    const testUsers = helpers.makeUsersArray()
     const testUser = testUsers[0]
 
     before('make knex instance', () => {
@@ -78,7 +78,6 @@ describe('Auth Endpoints', function() {
                     process.env.JWT_SECRET,
                     {
                         subject: testUser.username,
-                        expiresIn: process.env.JWT_EXPIRY,
                         algorithm: 'HS256',
                     }
                     )
@@ -87,6 +86,7 @@ describe('Auth Endpoints', function() {
                 .send(userValidCreds)
                 .expect(200, {
                     authToken: expectedToken,
+                    user_id: 1
                 })
             })
     })

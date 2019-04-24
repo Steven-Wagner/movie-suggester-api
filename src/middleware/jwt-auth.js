@@ -1,6 +1,7 @@
 const AuthService = require('../auth/auth-service')
 
 function requireAuth(req, res, next) {
+    console.log('getting here')
     const authToken = req.get('Authorization') || ''
 
     let bearerToken
@@ -24,10 +25,11 @@ function requireAuth(req, res, next) {
                 return res.status(401).json({ error: 'Unauthorized request' })
             
             req.user = user
+
+            if (user.id != req.params.user_id) {
+                return res.status(401).json({ error: 'Unauthorized request' })
+            }
             next()
-        })
-        .catch(err => {
-            next(err)
         })
     } catch(error) {
         res.status(401).json({ error: 'Unauthorized request' })
