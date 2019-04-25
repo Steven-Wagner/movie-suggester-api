@@ -14,16 +14,17 @@ const movieSuggestionsRouter = require('./movie-suggestions/movie-suggestions-ro
 
 const app = express();
 
+app.use(cors(
+        {
+        origin: CLIENT_ORIGIN
+    }
+    ));
+
 const morganSetting = (NODE_ENV === 'production')
     ? 'tiny'
     : 'dev';
 
     app.use(morgan(morganSetting));
-    app.use(cors(
-    //     {
-    //     origin: CLIENT_ORIGIN
-    // }
-    ));
     app.use(helmet());
 
     app.use('/api/auth', authRouter)
