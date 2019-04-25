@@ -16,7 +16,7 @@ const app = express();
 
 app.use(cors(
         {
-        origin: CLIENT_ORIGIN
+        origin: 'no-cors'//CLIENT_ORIGIN
     }
     ));
 
