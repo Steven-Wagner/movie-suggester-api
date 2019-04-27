@@ -79,7 +79,6 @@ describe('signup Endpoints', function() {
                 .send(newUser)
                 .expect(201)
                 .then(res => {
-                    console.log(res.body)
                     return db
                         .from('movie_suggester_users')
                         .select('*')

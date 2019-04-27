@@ -6,7 +6,13 @@ reviewService = {
             .where('title', title)
             .first()
     },
-
+    getMovieById(db, movie_id) {
+        return db
+            .from('movie_suggester_movies')
+            .select('id')
+            .where('id', movie_id)
+            .first()
+    },
     insertNewMovie(db, newMovieData) {
         return db
             .into('movie_suggester_movies')
@@ -22,6 +28,17 @@ reviewService = {
             .returning('id')
             .then(([id]) => id)
     },
+
+    updateReview(db, updatedReview) {
+        return db
+            .from('movie_suggester_movie_ratings')
+            .where('user_id', updatedReview.user_id)
+            .where('movie_id', updatedReview.movie_id)
+            .update({
+                star_rating: updatedReview.star_rating
+            })
+    },
+
     checkDuplicateReview(db, userId, movieId) {
         return db
             .from('movie_suggester_movie_ratings')
@@ -45,7 +62,7 @@ reviewService = {
                 error: `Rating must be 1-5 stars`
             })
         }
-        console.log('done validate')
+
     }
 }
 

@@ -156,6 +156,23 @@ reviewRouter
         if (failedValidation) {
             return failedValidation
         }
+
+        reviewService.getMovieById(
+            req.app.get('db'),
+            movie_id)
+        .then(movie_idCheck => {
+            if (!movie_idCheck) {
+                return res.status(400).json({error: `movie_id is not in database`})
+            }
+
+            reviewService.updateReview(
+                req.app.get('db'),
+                updatedReview
+            )
+            .then(updateResMovieId => {
+                res.status(200).json({review_id: updateResMovieId})
+            })
+        })
         //write test cases
 
         //update DB

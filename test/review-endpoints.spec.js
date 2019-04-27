@@ -114,8 +114,6 @@ describe('Review Endpoints', function() {
 
                 const testMovies = helpers.makeMoviesArray();
                 const testReviews = helpers.makeRatingsArray();
-
-                console.log('testrex', testReviews)
         
 
                 beforeEach('insert movies', async function() { 
@@ -144,15 +142,11 @@ describe('Review Endpoints', function() {
                     .expect(409, { error:
                         'This movie has already been reviewed',
                        movie_id: 1 })
-                    .then(res => {
-                        console.log(res.body)
-                    })
                 })
                 
                 it(`responds 409 when user has alreasy reviewed the movie and new review is not inserted into ratings table`, () => {
 
                     const duplicateReview = Object.assign({},testReviews[0])
-                    console.log('dupl', duplicateReview)
                     duplicateReview.star_rating = duplicateReview.star_rating+1
                     duplicateReview.title = 'Jaws'
 
@@ -329,6 +323,109 @@ describe('Review Endpoints', function() {
                 .then(movieData => {
                     expect(movieData.Title).to.eql(selectedExpectedResponse.Title)
                     expect(movieData.Year).to.eql(selectedExpectedResponse.Year)
+                })
+            })
+        })
+    })
+    describe('PATCH api/review', () => {
+        const testUsers =  helpers.makeUsersArray()
+        const testMovies = helpers.makeMoviesArray();
+        const testReviews = helpers.makeRatingsArray();
+
+        beforeEach('insert users', async function() { 
+            await helpers.seedUsers(
+                db,
+                testUsers
+            )
+        }
+        )
+        beforeEach('insert movies', async function() { 
+            await helpers.seedMovies(
+                db,
+                testMovies
+            )
+        })
+        beforeEach('insert reviews', async function() { 
+            await helpers.seedRatings(
+                db,
+                testReviews
+            )
+        })
+
+        context('bad client data for review PATCH', () => {
+            const requiredFields = ['movie_id', 'user_id', 'star_rating']
+
+            requiredFields.forEach(field => {
+
+                const updateReviewBody = {
+                    movie_id: testReviews[0].movie_id,
+                    user_id: testReviews[0].user_id,
+                    star_rating: testReviews[0].star_rating+1
+                }
+                it(`responds 400 when required ${field} is missing`, () => {
+
+                    delete updateReviewBody[field]
+
+                    return request(app)
+                    .patch(`/api/review/${updateReviewBody.user_id}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                    .send(updateReviewBody)
+                    .expect(400, {
+                        error: `${field} is required`
+                    })
+                })
+            })
+            it('responds 400 when movie_id is not in database', () => {
+                const updateReviewBody = {
+                    movie_id: testMovies.length+1,
+                    user_id: testReviews[0].user_id,
+                    star_rating: testReviews[0].star_rating+1
+                }
+                return request(app)
+                .patch(`/api/review/${updateReviewBody.user_id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .send(updateReviewBody)
+                .expect(400, {
+                    error: `movie_id is not in database`
+                })
+            })
+        })
+        context('Happy path', () => {
+
+            const updateReviewBody = {
+                movie_id: testReviews[0].movie_id,
+                user_id: testReviews[0].user_id,
+                star_rating: testReviews[0].star_rating+1
+            }
+
+            it('responds 200 and review_id', () => {
+                return request(app)
+                    .patch(`/api/review/${updateReviewBody.user_id}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                    .send(updateReviewBody)
+                    .expect(200, {
+                        review_id: 1
+                    })
+            })
+            it('responds 200 and updated info is added to database', () => {
+                return request(app)
+                .patch(`/api/review/${updateReviewBody.user_id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .send(updateReviewBody)
+                .expect(200, {
+                    review_id: 1
+                })
+                .then(updateRes => {
+                    return db
+                        .from('movie_suggester_movie_ratings')
+                        .where('id', updateRes.body.review_id)
+                        .select('*')
+                        .first()
+                        .then(reviewDB => {
+                            expect(reviewDB.user_id).to.eql(updateReviewBody.user_id)
+                            expect(reviewDB.movie_id).to.eql(updateReviewBody.movie_id)
+                            expect(reviewDB.star_rating).to.eql(updateReviewBody.star_rating)
+                        })
                 })
             })
         })
