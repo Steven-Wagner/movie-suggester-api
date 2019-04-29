@@ -42,7 +42,9 @@ reviewRouter
         //     })
         // }
 
-        const urlFormatedTitle = title.replace(/' '/g, '+')
+        const urlTitle = reviewService.toTitleCase(title)
+
+        const urlFormatedTitle = urlTitle.replace(/' '/g, '+')
         fetch(`https://www.omdbapi.com/?i=${process.env.OMDB_API_KEY}&t=${urlFormatedTitle}`, {
         })
         .then(res => {
@@ -60,7 +62,7 @@ reviewRouter
 
             reviewService.getMovieIdByTitle(
                 req.app.get('db'),
-                title
+                movieData.Title
             )
             .then(movieId => {
                 //if movie is already in Database
@@ -110,7 +112,7 @@ reviewRouter
                 else {
 
                     movieToInsert = {
-                        title: title,
+                        title: movieData.Title,
                         director: movieData.Director,
                         img: movieData.Poster,
                         release_year: movieData.Year,
@@ -173,9 +175,7 @@ reviewRouter
                 res.status(200).json({review_id: updateResMovieId})
             })
         })
-        //write test cases
 
-        //update DB
 
 
     })

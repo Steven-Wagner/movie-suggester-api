@@ -2,6 +2,7 @@ const knex = require('knex')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
 const fetch = require('node-fetch')
+const reviewService = require('../src/review/review-service')
 
 describe('Review Endpoints', function() {
     let db
@@ -323,6 +324,42 @@ describe('Review Endpoints', function() {
                 .then(movieData => {
                     expect(movieData.Title).to.eql(selectedExpectedResponse.Title)
                     expect(movieData.Year).to.eql(selectedExpectedResponse.Year)
+                })
+            })
+        })
+
+        describe('titles are converted to title case', () => {
+
+            const lowercaseTitleReview = {
+                title: 'jaws',
+                user_id: 1,
+                star_rating: 3
+            }
+
+            it('lowercase title input is converted to titlecase', () => {
+                return request(app)
+                .post(`/api/review/${lowercaseTitleReview.user_id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .send(lowercaseTitleReview)
+                .expect(201)
+            })
+            
+            it('Title is added to database in titlecase', () => {
+                return request(app)
+                .post(`/api/review/${lowercaseTitleReview.user_id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .send(lowercaseTitleReview)
+                .expect(201)
+                .then(res => {
+                    return db
+                        .from('movie_suggester_movies')
+                        .where('id', res.body.review_id)
+                        .select('*')
+                        .first()
+                        .then(movie => {
+                            const titleCaseToExpect = reviewService.toTitleCase(lowercaseTitleReview.title)
+                            expect(movie.title).to.eql(titleCaseToExpect)
+                        })
                 })
             })
         })
