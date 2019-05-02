@@ -30,8 +30,6 @@ reviewRouter
 
         const urlTitle = reviewService.toTitleCase(title)
 
-        console.log('titleCase', urlTitle)
-
         const urlFormatedTitle = urlTitle.replace(/' '/g, '+')
         fetch(`https://www.omdbapi.com/?i=${process.env.OMDB_API_KEY}&t=${urlFormatedTitle}`, {
         })
