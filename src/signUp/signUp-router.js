@@ -13,7 +13,7 @@ signUpRouter
         for (const [key, value] of Object.entries(newUser)) {
             if (value == null) {
                 return  res.status(400).json({
-                    error: `${key} is required`
+                    message: `${key} is required`
                 })
             }
         }
@@ -27,7 +27,7 @@ signUpRouter
         .then(isUsernameInvalid => {
             if (isUsernameInvalid) {
                 return res.status(400).json({
-                    error: `username already exists`
+                    message: `username already exists`
                 })
             }
 

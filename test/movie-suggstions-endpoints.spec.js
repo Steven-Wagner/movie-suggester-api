@@ -65,7 +65,7 @@ describe('movie-suggestions Endpoints', function() {
 
             return request(app)
             .get(`/api/moviesuggestions/${invalidUserId}`)
-            .expect(400, {error: `Invalid user_id`})
+            .expect(400, {message: `Invalid user_id`})
         })
         
         it('happy path responds 200 and movie suggestions', () => {

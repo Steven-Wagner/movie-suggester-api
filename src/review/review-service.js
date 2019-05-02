@@ -52,14 +52,14 @@ reviewService = {
         for (const [key, value] of Object.entries(requiredFields)) {
             if (value == null) {
                 return res.status(400).json({
-                    error: `${key} is required`
+                    message: `${key} is required`
                 })
             }
         }
         //Check if star_rating is an int 1-5
         if (star_rating < 1 || star_rating > 5 || isNaN(star_rating)) {
             return res.status(400).json({
-                error: `Rating must be 1-5 stars`
+                message: `Rating must be 1-5 stars`
             })
         }
 
@@ -88,8 +88,9 @@ reviewService = {
             str = str.replace(new RegExp('\\b' + uppers[i] + '\\b', 'g'), 
             uppers[i].toUpperCase());
         
-        return str;   
-    }
+        return str;
+   
+    },
 }
 
 module.exports = reviewService

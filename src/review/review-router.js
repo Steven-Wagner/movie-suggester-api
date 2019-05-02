@@ -28,21 +28,9 @@ reviewRouter
             return failedValidation
         }
 
-        // for (const [key, value] of Object.entries(requiredFields)) {
-        //     if (value == null) {
-        //         return  res.status(400).json({
-        //             error: `${key} is required`
-        //         })
-        //     }
-        // }
-        // //Check if star_rating is an int 1-5
-        // if (star_rating < 1 || star_rating > 5 || isNaN(star_rating)) {
-        //     return res.status(400).json({
-        //         error: `Rating must be 1-5 stars`
-        //     })
-        // }
-
         const urlTitle = reviewService.toTitleCase(title)
+
+        console.log('titleCase', urlTitle)
 
         const urlFormatedTitle = urlTitle.replace(/' '/g, '+')
         fetch(`https://www.omdbapi.com/?i=${process.env.OMDB_API_KEY}&t=${urlFormatedTitle}`, {
@@ -56,7 +44,7 @@ reviewRouter
         .then(movieData => {
             if(!movieData.Title) {
                 return res.status(400).json({
-                    error: 'Title does not exist'
+                    message: 'Title does not exist'
                 })
             }
 
@@ -76,7 +64,7 @@ reviewRouter
                         if (duplicateCheck) {
 
                             const duplicateBody = {
-                                error: `This movie has already been reviewed`,
+                                message: `This movie has already been reviewed`,
                                 movie_id: duplicateCheck.movie_id
                             }
 
@@ -94,7 +82,7 @@ reviewRouter
                             )
                             .then(ignoreId => {
                                 if (isNaN(ignoreId)) {
-                                    return res.status(500).json({error: 'movie was not added correctly'})
+                                    return res.status(500).json({message: 'movie was not added correctly'})
                                 }
                             })
 
@@ -143,6 +131,7 @@ reviewRouter
                             return res.status(201).json({review_id: reviewId})
                         })
                     })
+                    .catch(next)
                 }
             })
         })
@@ -164,7 +153,7 @@ reviewRouter
             movie_id)
         .then(movie_idCheck => {
             if (!movie_idCheck) {
-                return res.status(400).json({error: `movie_id is not in database`})
+                return res.status(400).json({message: `movie_id is not in database`})
             }
 
             reviewService.updateReview(

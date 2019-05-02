@@ -52,7 +52,7 @@ describe('Review Endpoints', function() {
                     .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(newReviewBody)
                     .expect(400, {
-                        error: `${field} is required`
+                        message: `${field} is required`
                     })
                 })
             })
@@ -69,7 +69,7 @@ describe('Review Endpoints', function() {
                     .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(badUserId)
                     .expect(400, {
-                        error: `Invalid user_id`
+                        message: `Invalid user_id`
                 })
             })
             
@@ -90,7 +90,7 @@ describe('Review Endpoints', function() {
                             .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                             .send(badUserId)
                             .expect(400, {
-                                error: `Rating must be 1-5 stars`
+                                message: `Rating must be 1-5 stars`
                         })
                     })
                 })
@@ -107,7 +107,7 @@ describe('Review Endpoints', function() {
                     .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(badTitle)
                     .expect(400, {
-                        error: 'Title does not exist'
+                        message: 'Title does not exist'
                 })
             })
 
@@ -140,7 +140,7 @@ describe('Review Endpoints', function() {
                     .post(`/api/review/${duplicateReview.user_id}`)
                     .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(duplicateReview)
-                    .expect(409, { error:
+                    .expect(409, { message:
                         'This movie has already been reviewed',
                        movie_id: 1 })
                 })
@@ -155,7 +155,7 @@ describe('Review Endpoints', function() {
                     .post(`/api/review/${duplicateReview.user_id}`)
                     .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(duplicateReview)
-                    .expect(409, { error:
+                    .expect(409, { message:
                         'This movie has already been reviewed',
                        movie_id: 1 })
                     .then(res => {
@@ -408,7 +408,7 @@ describe('Review Endpoints', function() {
                     .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(updateReviewBody)
                     .expect(400, {
-                        error: `${field} is required`
+                        message: `${field} is required`
                     })
                 })
             })
@@ -423,7 +423,7 @@ describe('Review Endpoints', function() {
                 .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                 .send(updateReviewBody)
                 .expect(400, {
-                    error: `movie_id is not in database`
+                    message: `movie_id is not in database`
                 })
             })
         })

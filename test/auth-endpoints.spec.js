@@ -47,7 +47,7 @@ describe('Auth Endpoints', function() {
                 .post('/api/auth/login')
                 .send(loginAttemptBody)
                 .expect(400, {
-                    error: `Incorrect username or password`,
+                    message: `Incorrect username or password`,
                 })
             })
         })
@@ -57,7 +57,7 @@ describe('Auth Endpoints', function() {
                 return  request(app)
                     .post('/api/auth/login')
                     .send(userInvalidUser)
-                    .expect(400, { error: `Incorrect username or password` })
+                    .expect(400, { message: `Incorrect username or password` })
             })
             
             it(`responds with 400 'invalid user or password'`, () => {
@@ -65,7 +65,7 @@ describe('Auth Endpoints', function() {
                 return  request(app)
                     .post('/api/auth/login')
                     .send(userInvalidUser)
-                    .expect(400, { error: `Incorrect username or password` })
+                    .expect(400, { message: `Incorrect username or password` })
             })
 
             it(`responds 200 and JWT auth token using secret when valid credentials`, () => {

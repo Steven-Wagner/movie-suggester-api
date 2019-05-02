@@ -55,7 +55,7 @@ describe('Friend Endpoints', function() {
                     .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(newFriendRequestBody)
                     .expect(400, {
-                        error: `${field} is required`
+                        message: `${field} is required`
                     })
                 })
             })
@@ -72,7 +72,7 @@ describe('Friend Endpoints', function() {
                 .set('Authorization', helpers.makeAuthHeader(testUsers[newFriendRequestBody.follower_id-1]))
                 .send(newFriendRequestBody)
                 .expect(400, {
-                    error: `Invalid friend_id`
+                    message: `Invalid friend_id`
                 })
             })
         
@@ -86,7 +86,7 @@ describe('Friend Endpoints', function() {
                 .set('Authorization', helpers.makeAuthHeader(testUsers[alreadyFriends.follower_id-1]))
                 .send(alreadyFriends)
                 .expect(400, {
-                    error: `Already friends with ${alreadyFriends.friend_id}`
+                    message: `Already friends with ${alreadyFriends.friend_id}`
                 })
             })
         })
@@ -170,7 +170,7 @@ describe('Friend Endpoints', function() {
 
             return request(app)
             .get(`/api/friend/suggestions/${invalidUserId}`)
-            .expect(400, {error: `Invalid user_id`})
+            .expect(400, {message: `Invalid user_id`})
         })
         
         it('happy path responds 200 and friend suggestions', () => {

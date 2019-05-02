@@ -50,7 +50,7 @@ describe('signup Endpoints', function() {
                     .post('/api/signup')
                     .send(loginAttemptBody)
                     .expect(400, {
-                        error: `${field} is required`,
+                        message: `${field} is required`,
                     })
                 })
             })
@@ -66,7 +66,7 @@ describe('signup Endpoints', function() {
                 .post('/api/signup')
                 .send(duplicateUsernameUser)
                 .expect(400, {
-                    error: `username already exists`
+                    message: `username already exists`
                 }
                 )
             })

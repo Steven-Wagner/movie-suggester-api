@@ -58,7 +58,7 @@ describe('Review Endpoints', function() {
                     .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(newIgnoreBody)
                     .expect(400, {
-                        error: `${field} is required`
+                        message: `${field} is required`
                     })
                 })
             })
@@ -80,7 +80,7 @@ describe('Review Endpoints', function() {
                     .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                     .send(newIgnoreBody)
                     .expect(400, {
-                        error: `Invalid ${field}`
+                        message: `Invalid ${field}`
                     })
                 })
             })

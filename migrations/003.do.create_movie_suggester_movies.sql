@@ -3,7 +3,7 @@ CREATE TABLE movie_suggester_movies (
     title text not null,
     director text,
     img text,
-    release_year INTEGER not null,
+    release_year text not null,
     imdb_id text,
     date_created TIMESTAMP DEFAULT now() NOT NULL
 );

@@ -13,7 +13,7 @@ authRouter
         for (const [key, value] of Object.entries(loginUser)) {
             if (value == null) {
                 return  res.status(400).json({
-                    error: `Incorrect username or password`
+                    message: `Incorrect username or password`
                 })
             }
         }
@@ -24,7 +24,7 @@ authRouter
         .then(dbUser => {
             if (!dbUser) {
                 return res.status(400).json({
-                    error: 'Incorrect username or password' 
+                    message: 'Incorrect username or password' 
                 })
             }
 
@@ -32,7 +32,7 @@ authRouter
                 .then(comparePassword => {
                     if (!comparePassword) {
                         return res.status(400).json({
-                            error: 'Incorrect username or password'
+                            message: 'Incorrect username or password'
                         })
                     }
                     const sub = dbUser.username

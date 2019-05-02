@@ -19,14 +19,14 @@ friendRouter
         for (const [key, value] of Object.entries(newFollowing)) {
             if (value == null) {
                 return  res.status(400).json({
-                    error: `${key} is required`
+                    message: `${key} is required`
                 })
             }
         }
 
         if (follower_id === friend_id) {
             return res.status(400).json({
-                error: `Invalid friend_id`
+                message: `Invalid friend_id`
             })
         }
 
@@ -39,7 +39,7 @@ friendRouter
             
             if (alreadyFriends) {
                 return res.status(400).json({
-                    error: `Already friends with ${alreadyFriends.friend_id}`
+                    message: `Already friends with ${alreadyFriends.friend_id}`
                 })
             }
 

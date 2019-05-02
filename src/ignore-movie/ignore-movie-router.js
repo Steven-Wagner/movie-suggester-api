@@ -17,7 +17,7 @@ ignoreRouter
         for (const [key, value] of Object.entries(newMovieToIgnore)) {
             if (value == null) {
                 return  res.status(400).json({
-                    error: `${key} is required`
+                    message: `${key} is required`
                 })
             }
         }
@@ -25,7 +25,7 @@ ignoreRouter
         //is ignore valid?
         if (ignore !== 'watched_it' && ignore !== 'not_interested') {
             return res.status(400).json({
-                error: `Invalid ignore`
+                message: `Invalid ignore`
             })
         }
 
@@ -37,7 +37,7 @@ ignoreRouter
         .then(id => {
             if(!id) {
                 return res.status(400).json({
-                    error: `Invalid user_id`
+                    message: `Invalid user_id`
                 })
             }
             //does movie exist?
@@ -48,7 +48,7 @@ ignoreRouter
             .then(id => {
                 if(!id) {
                     return res.status(400).json({
-                        error: `Invalid movie_id`
+                        message: `Invalid movie_id`
                     })
                 }
 
