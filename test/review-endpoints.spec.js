@@ -186,7 +186,7 @@ describe('Review Endpoints', function() {
                     title: "Jaws",
                     director: "Steven Spielberg",
                     img: "https://m.media-amazon.com/images/M/MV5BMmVmODY1MzEtYTMwZC00MzNhLWFkNDMtZjAwM2EwODUxZTA5XkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_SX300.jpg",
-                    release_year: 1975,
+                    release_year: "1975",
                     imdb_id: "tt0073195",
                     id: 1,
                 }
@@ -249,7 +249,6 @@ describe('Review Endpoints', function() {
             }
 
             it(`Movie review is added to ratings table`, () => {
-
                 return request(app)
                 .post(`/api/review/${ratingOfMovieInDB.user_id}`)
                 .set('Authorization', helpers.makeAuthHeader(testUsers[0]))

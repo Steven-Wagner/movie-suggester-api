@@ -14,6 +14,8 @@ const movieSuggestionsRouter = require('./movie-suggestions/movie-suggestions-ro
 
 const app = express();
 
+console.log('client origin',CLIENT_ORIGIN)
+
 app.use(cors(
         {
         origin: CLIENT_ORIGIN

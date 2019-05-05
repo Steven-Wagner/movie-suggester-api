@@ -27,6 +27,9 @@ reviewService = {
             .insert(newReview)
             .returning('id')
             .then(([id]) => id)
+            .catch(error => {
+                console.log('duplicate key incriment by 1 after error is caught')
+            })
     },
 
     updateReview(db, updatedReview) {

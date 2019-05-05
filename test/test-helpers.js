@@ -108,7 +108,7 @@ function makeIgnoresArray() {
         {
         user_id: 2,
         movie_id: 2,
-        ignore: 'not_intrested'
+        ignore: 'not_interested'
         },
         {
         user_id: 3,
