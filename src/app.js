@@ -17,9 +17,9 @@ const app = express();
 console.log('client origin',CLIENT_ORIGIN)
 
 app.use(cors(
-        {
-        origin: CLIENT_ORIGIN
-    }
+    //     {
+    //     origin: CLIENT_ORIGIN
+    // }
     ));
 
 const morganSetting = (NODE_ENV === 'production')

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const {PORT, DB_URL} = require('../src/config')
+// const {PORT, DB_URL} = require('../src/config')
 const knex = require('knex')
 require('dotenv').config()
 const fetch = require('node-fetch')
@@ -116,6 +116,9 @@ function addReviews(reviewsData) {
             console.log('ids of reviews', res)
         })
     })
+    .then(() => {
+        console.log('finished')
+    })
 }
 
 function insertReviews(reviewsToAdd) {
@@ -178,6 +181,7 @@ function getMovieData(movieIdsFiltered, mappedMovies, resolve) {
                     }
                 })
                 .catch(error => {
+                    console.log(error)
                 })
             )
         }
