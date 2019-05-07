@@ -180,6 +180,19 @@ describe('Review Endpoints', function() {
                 star_rating: 3
             }
 
+            it(`movie with roman numerals and a dash are added properly`, () => {
+                const romanNumMovie = {
+                    title : 'Star Wars: Episode IV - A New Hope',
+                    user_id: 1,
+                    star_rating: 5
+                }
+                return request(app)
+                    .post(`/api/review/${romanNumMovie.user_id}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                    .send(romanNumMovie)
+                    .expect(201)
+            })
+
             it(`movie is added to database`, () => {
 
                 const expectedResult = {
