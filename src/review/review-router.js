@@ -45,6 +45,12 @@ reviewRouter
                     message: 'Title does not exist'
                 })
             }
+            if (movieData.Title !== urlTitle) {
+                console.log('no title')
+                return res.status(400).json({
+                    message: 'Title does not exist'
+                })
+            }
 
             reviewService.getMovieIdByTitle(
                 req.app.get('db'),

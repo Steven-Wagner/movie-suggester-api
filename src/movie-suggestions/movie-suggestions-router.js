@@ -21,8 +21,9 @@ movieSuggesterRouter
             console.log('movie suggestions', movieSuggestions.length)
             if (movieSuggestions.length > 100) {
                 moviesToReturn = movieSuggestions.slice(0,99)
+                return res.status(200).json(moviesToReturn)
             }
-            res.status(200).json(moviesToReturn)
+            res.status(200).json(movieSuggestions)
         })
     })
 
