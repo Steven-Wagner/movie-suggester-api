@@ -10,8 +10,11 @@ const SignUpService = {
         return db
             .insert(userData)
             .into('movie_suggester_users')
-            .returning('*')  
-            .then(([user]) => user.id)      
+            .returning('id')  
+            .then(([id]) => id) 
+            .catch(error => {
+                console.log('duplicate key incriment by 1 after error is caught')
+            })
     },
     hashPassword(password) {
         return bcrypt.hash(password, 12)

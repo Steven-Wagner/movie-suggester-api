@@ -12,7 +12,9 @@ const db = knex({
     connection: DB_URL
 })
 
-const numOfReviewsToSeed = 500;
+console.log(DB_URL)
+
+const numOfReviewsToSeed = 1500;
 
 fs.readFile('./seedData/ml-latest-small/ratings.csv', 'utf-8', (err, data) => {
     if (err) throw err;
@@ -115,9 +117,18 @@ function addReviews(reviewsData) {
         .then(res => {
             console.log('ids of reviews', res)
         })
-    })
-    .then(() => {
-        console.log('finished')
+        .then(() => {
+            db.raw(`SELECT setval('movie_suggester_users_id_seq', 100);`)
+            .then(res => {
+                db.raw(`SELECT nextval('movie_suggester_users_id_seq')`)
+            })
+            db.raw(`SELECT setval('movie_suggester_movies_id_seq', 50000);`)
+            .then(res => {
+                db.raw(`SELECT nextval('movie_suggester_movies_id_seq')`)
+            })
+            
+            console.log('finished')
+        })
     })
 }
 

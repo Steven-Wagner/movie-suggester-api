@@ -7,6 +7,7 @@ const movieSuggesterRouter = express.Router()
 const jsonBodyParser = express.json()
 
 movieSuggesterRouter
+    //will eventually want to pageinate
     .route('/:user_id')
     .all(checkUserIdExists)
     .all(requireAuth)
@@ -16,7 +17,12 @@ movieSuggesterRouter
             req.params.user_id
         )
         .then(movieSuggestions => {
-            res.status(200).json(movieSuggestions)
+            let moviesToReturn;
+            console.log('movie suggestions', movieSuggestions.length)
+            if (movieSuggestions.length > 100) {
+                moviesToReturn = movieSuggestions.slice(0,99)
+            }
+            res.status(200).json(moviesToReturn)
         })
     })
 
