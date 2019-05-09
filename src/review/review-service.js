@@ -92,11 +92,13 @@ reviewService = {
             uppers[i].toUpperCase());
         }
 
-        //Ensure that letters after a dash are captilized
-        dashCapitals = ['- a', '- t'];
-        for (i = 0, j = dashCapitals.length; i < 1; i++) {
-            str = str.replace(new RegExp(`${dashCapitals[i]}`, "g"), 
-            dashCapitals[i].toUpperCase());
+        //Words after a '-' or ':' should be capitilized
+        const regexLowerCaseAfterColonOrDash = RegExp(`: [a-z]|- [a-z]`, "g")
+
+        let itemsToCapitilize;
+    
+        while ((itemsToCapitilize = regexLowerCaseAfterColonOrDash.exec(str)) !== null) {
+            str = str.replace(itemsToCapitilize[0], itemsToCapitilize[0].toUpperCase())
         }
         
         return str;

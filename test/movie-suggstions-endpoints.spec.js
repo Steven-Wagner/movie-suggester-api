@@ -17,11 +17,17 @@ describe('movie-suggestions Endpoints', function() {
         app.set('db', db)
     })
 
-    after('disconnect from db', () => db.destroy())
+    after('disconnect from db', async function() {
+        await db.destroy()
+    })
 
-    before('cleanup', () => helpers.cleanTables(db))
+    before('cleanup', async function() {
+        await helpers.cleanTables(db)
+    })
 
-    afterEach('cleanup', () => helpers.cleanTables(db))
+    afterEach('cleanup', async function() {
+        await helpers.cleanTables(db)
+    })
 
     describe(`GET /api/moviesuggestions/:user_id`, () => {
 

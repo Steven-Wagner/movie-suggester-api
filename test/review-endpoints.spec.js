@@ -17,7 +17,6 @@ describe('Review Endpoints', function() {
 
     after('disconnect from db', () => db.destroy())
 
-    console.log(db)
 
     before('cleanup', () => helpers.cleanTables(db))
 
@@ -375,6 +374,20 @@ describe('Review Endpoints', function() {
                             expect(movie.title).to.eql(titleCaseToExpect)
                         })
                 })
+            })
+
+            it(`Title with '-' followed by a minor word is capitlized corectly`, () => {
+                const colonTitle = {
+                    title: 'Star Wars: The Force Awakens',
+                    user_id: 1,
+                    star_rating: 3
+                }
+
+                return request(app)
+                .post(`/api/review/${colonTitle.user_id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .send(colonTitle)
+                .expect(201)                
             })
         })
     })
