@@ -28,7 +28,7 @@ reviewService = {
             .returning('id')
             .then(([id]) => id)
             .catch(error => {
-                console.log('duplicate key incriment by 1 after error is caught')
+                throw new Error(error)
             })
     },
 

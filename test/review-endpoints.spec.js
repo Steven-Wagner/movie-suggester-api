@@ -17,6 +17,8 @@ describe('Review Endpoints', function() {
 
     after('disconnect from db', () => db.destroy())
 
+    console.log(db)
+
     before('cleanup', () => helpers.cleanTables(db))
 
     afterEach('cleanup', () => helpers.cleanTables(db))
@@ -322,7 +324,7 @@ describe('Review Endpoints', function() {
         })
 
         describe('omdbapi.com tests', () => {
-            it.only('fetch request from omdbapi.com is working', () => {
+            it('fetch request from omdbapi.com is working', () => {
                 const selectedExpectedResponse = {
                     Title: "Se7en",
                     Year: "1995",
@@ -334,7 +336,6 @@ describe('Review Endpoints', function() {
                     return res.json()
                 })
                 .then(movieData => {
-                    console.log('got movie dtaA', movieData)
                     expect(movieData.Title).to.eql(selectedExpectedResponse.Title)
                     expect(movieData.Year).to.eql(selectedExpectedResponse.Year)
                 })
