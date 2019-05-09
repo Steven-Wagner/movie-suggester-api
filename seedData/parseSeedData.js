@@ -14,7 +14,7 @@ const db = knex({
 
 console.log(DB_URL)
 
-const numOfReviewsToSeed = 1500;
+const numOfReviewsToSeed = 800;
 
 fs.readFile('./seedData/ml-latest-small/ratings.csv', 'utf-8', (err, data) => {
     if (err) throw err;
@@ -160,7 +160,7 @@ function getMovieData(movieIdsFiltered, mappedMovies, resolve) {
             return movie[0] === movieIdToGet
         })
 
-        currentTitle = currentTitleData[1].slice(0, -6)
+        let currentTitle = currentTitleData[1].slice(0, -7)
 
          if (currentTitle[0] !== `"`) {
             const urlFormatedTitle = currentTitle.replace(/' '/g, '+')
@@ -175,7 +175,8 @@ function getMovieData(movieIdsFiltered, mappedMovies, resolve) {
                     return res.json()
                 })
                 .then(OMDBData => {
-                    if (!OMDBData.Title) {
+                    if (!OMDBData.Title || OMDBData.Title !== currentTitle) {
+                        console.log('title comparison', `currentTitle is ${currentTitle}, omdbtitle is ${OMDBData.Title}`)
                         badMovieTitles.push(currentTitle)
                     }
                     else {
@@ -201,7 +202,14 @@ function getMovieData(movieIdsFiltered, mappedMovies, resolve) {
     .then(() => {
         insertMovies(movieData)
         .then(resIds => {
-            resolve('finished')
+            return db
+                .from('movie_suggester_movies')
+                .where('title', 'Planet of the Apes')
+                .select('title')
+        })
+        .then(moviecheck => {
+            console.log(`movie check for Planet of the Apes has, ${moviecheck.length}. Should be 1`)
+            resolve(`finished with ${badMovieTitles.length} bad titles.`)
         })
     })
 }

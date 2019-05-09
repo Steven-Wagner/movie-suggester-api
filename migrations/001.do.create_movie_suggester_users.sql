@@ -7,5 +7,3 @@ CREATE TABLE movie_suggester_users (
     bio text,
     date_created TIMESTAMP DEFAULT now() NOT NULL
 );
-
-ALTER SEQUENCE movie_suggester_users_id_seq RESTART with 100;
