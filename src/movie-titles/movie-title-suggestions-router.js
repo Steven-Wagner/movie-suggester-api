@@ -8,8 +8,6 @@ movieTitleSuggestions
     .get((req, res, next) => {
         const userInput = req.params.userInput
 
-        // if (userInput.length > 5) {
-
             movieTitleSuggestionsService.getTitleSuggestions(
                 req.app.get('db'),
                 userInput)
