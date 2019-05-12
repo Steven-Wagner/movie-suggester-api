@@ -11,6 +11,7 @@ const friendRouter = require('./friend/friend-router')
 const reviewRouter = require('./review/review-router')
 const ignoreRouter = require('./ignore-movie/ignore-movie-router')
 const movieSuggestionsRouter = require('./movie-suggestions/movie-suggestions-router')
+const movieTitleSuggestions = require('./movie-titles/movie-title-suggestions-router')
 
 const app = express();
 
@@ -40,6 +41,8 @@ const morganSetting = (NODE_ENV === 'production')
     app.use('/api/ignore', ignoreRouter)
 
     app.use('/api/moviesuggestions', movieSuggestionsRouter)
+    
+    app.use('/api/movietitlesuggestions', movieTitleSuggestions)
 
     app.use(function errorHandler(error, req, res, next) {
         let response;
