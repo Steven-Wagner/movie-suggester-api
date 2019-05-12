@@ -4,6 +4,9 @@ const helpers = require('./test-helpers')
 const jwt = require('jsonwebtoken')
 
 describe('Auth Endpoints', function() {
+
+    this.timeout(5000)
+
     let db
 
     const testUsers = helpers.makeUsersArray()

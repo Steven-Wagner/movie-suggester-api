@@ -1,6 +1,6 @@
 const express = require('express')
 const movieService = require('./movie-suggestions-service')
-const checkUserIdExists = require('../async-services/async-service')
+const checkUserIdExists = require('../middleware/user-id-exists/check-user-id-exists')
 const {requireAuth} = require('../middleware/jwt-auth')
 
 const movieSuggesterRouter = express.Router()
@@ -11,19 +11,22 @@ movieSuggesterRouter
     .route('/:user_id')
     .all(checkUserIdExists)
     .all(requireAuth)
-    .get((req, res) => {
+    .get((req, res, next) => {
         movieService.getMovies(
             req.app.get('db'),
             req.params.user_id
         )
         .then(movieSuggestions => {
             let moviesToReturn;
-            console.log('movie suggestions', movieSuggestions.length)
             if (movieSuggestions.length > 100) {
                 moviesToReturn = movieSuggestions.slice(0,99)
                 return res.status(200).json(moviesToReturn)
             }
             res.status(200).json(movieSuggestions)
+        })
+        //is this how to do this?
+        .catch(error => {
+            next(error)
         })
     })
 

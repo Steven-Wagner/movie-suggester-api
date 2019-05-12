@@ -1,7 +1,7 @@
 const express = require('express')
 const reviewService = require('./review-service')
 const fetch = require('node-fetch')
-const checkUserIdExists = require('../async-services/async-service')
+const checkUserIdExists = require('../middleware/user-id-exists/check-user-id-exists')
 const ignoreService = require('../ignore-movie/ignore-movie-service')
 const {requireAuth} = require('../middleware/jwt-auth')
 

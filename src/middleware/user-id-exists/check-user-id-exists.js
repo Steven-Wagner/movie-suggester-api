@@ -1,4 +1,4 @@
-const service = require('../util/services')
+const service = require('../../util/services');
 
 async function checkUserIdExists(req, res, next) {
     const user_id = req.params.user_id

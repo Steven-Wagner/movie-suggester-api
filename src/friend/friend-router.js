@@ -1,8 +1,8 @@
-const express = require('express')
-const friendService = require('./friend-service')
-const checkUserIdExists = require('../async-services/async-service')
-const getFriendSuggestions = require('../friend-suggestions/get-friend-suggestions')
-const {requireAuth} = require('../middleware/jwt-auth')
+const express = require('express');
+const friendService = require('./friend-service');
+const checkUserIdExists = require('../middleware/user-id-exists/check-user-id-exists');
+const getFriendSuggestions = require('../friend-suggestions/get-friend-suggestions');
+const {requireAuth} = require('../middleware/jwt-auth');
 
 const friendRouter = express.Router()
 const jsonBodyParser = express.json()

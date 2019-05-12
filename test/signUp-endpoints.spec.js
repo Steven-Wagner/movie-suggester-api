@@ -55,7 +55,7 @@ describe('signup Endpoints', function() {
                 })
             })
 
-            it('responds with 400 when username is already taken', () => {
+            it.only('responds with 400 when username is already taken', () => {
                 
                 const duplicateUsernameUser = {
                     username: 'dunder',
