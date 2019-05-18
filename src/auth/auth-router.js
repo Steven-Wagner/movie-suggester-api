@@ -45,12 +45,5 @@ authRouter
         })
         .catch(next)
     })
-    authRouter.post('/refresh', requireAuth, (req, res) => {
-        const sub = req.user.username
-        const payload = {user_id: req.user.id}
-        res.send({
-            authToken: AuthService.createJwt(sub, payload)
-        })
-    })
 
 module.exports = authRouter

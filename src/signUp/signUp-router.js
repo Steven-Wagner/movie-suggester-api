@@ -51,6 +51,9 @@ signUpRouter
                 })
             })
         })
+        .catch(error => {
+            next(error)
+        })
     })
 
 module.exports = signUpRouter

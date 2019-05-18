@@ -18,13 +18,13 @@ movieSuggesterRouter
         )
         .then(movieSuggestions => {
             let moviesToReturn;
+            //Only send first 100 movies
             if (movieSuggestions.length > 100) {
                 moviesToReturn = movieSuggestions.slice(0,99)
                 return res.status(200).json(moviesToReturn)
             }
             res.status(200).json(movieSuggestions)
         })
-        //is this how to do this?
         .catch(error => {
             next(error)
         })

@@ -62,6 +62,9 @@ ignoreRouter
                 })
             })
         })
+        .catch(error => {
+            next(error)
+        })
     })
 
 module.exports = ignoreRouter

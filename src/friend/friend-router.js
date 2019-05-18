@@ -59,13 +59,14 @@ friendRouter
     .route('/suggestions/:user_id')
     .all(checkUserIdExists)
     .all(requireAuth)
-    .get((req, res) => {
+    .get((req, res, next) => {
         getFriendSuggestions(
             req.app.get('db'),
             req.params.user_id)
         .then(friendSuggestions => {
             return res.status(200).json(friendSuggestions)
         })
+        .catch(next)
     })
 
 

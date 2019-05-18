@@ -167,6 +167,9 @@ reviewRouter
                 res.status(200).json({review_id: updateResMovieId})
             })
         })
+        .catch(error => {
+            next(error)
+        })
 
 
 

@@ -16,8 +16,6 @@ const pastReviewsRouter = require('./past-reviews/past-reviews-router')
 
 const app = express();
 
-console.log('client origin',CLIENT_ORIGIN)
-
 app.use(cors(
     //     {
     //     origin: CLIENT_ORIGIN
@@ -49,7 +47,6 @@ const morganSetting = (NODE_ENV === 'production')
 
     app.use(function errorHandler(error, req, res, next) {
         let response;
-        console.log(error)
         if (NODE_ENV === 'production') {
             response = {error: {message: 'server error'}}
         }
