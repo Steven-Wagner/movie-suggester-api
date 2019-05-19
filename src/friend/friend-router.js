@@ -3,9 +3,17 @@ const friendService = require('./friend-service');
 const checkUserIdExists = require('../middleware/user-id-exists/check-user-id-exists');
 const getFriendSuggestions = require('../friend-suggestions/get-friend-suggestions');
 const {requireAuth} = require('../middleware/jwt-auth');
+const xss = require('xss');
 
 const friendRouter = express.Router()
 const jsonBodyParser = express.json()
+
+const serializeFriendSuggestions = friendSuggestion => ({
+    user_id: friendSuggestion.user_id,
+    bio: xss(friendSuggestion.bio),
+    username: xss(friendSuggestion.username),
+    match_score: friendSuggestion.match_score
+})
 
 friendRouter
     .route('/:user_id')
@@ -64,7 +72,8 @@ friendRouter
             req.app.get('db'),
             req.params.user_id)
         .then(friendSuggestions => {
-            return res.status(200).json(friendSuggestions)
+            return res.status(200).json(
+                friendSuggestions.map(friendSuggestion => serializeFriendSuggestions(friendSuggestion)))
         })
         .catch(next)
     })

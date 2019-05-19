@@ -1,9 +1,9 @@
-const express = require('express')
-const SignUpService = require('./signUp-service')
-const AuthService = require('../auth/auth-service')
+const express = require('express');
+const SignUpService = require('./signUp-service');
+const AuthService = require('../auth/auth-service');
 
-const signUpRouter = express.Router()
-const jsonBodyParser = express.json()
+const signUpRouter = express.Router();
+const jsonBodyParser = express.json();
 
 signUpRouter
     .post('', jsonBodyParser, (req, res, next) => {

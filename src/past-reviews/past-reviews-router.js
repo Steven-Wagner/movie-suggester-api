@@ -1,9 +1,21 @@
-const express = require('express')
-const pastReviewsService = require('./past-reviews-service')
-const checkUserIdExists = require('../middleware/user-id-exists/check-user-id-exists')
-const {requireAuth} = require('../middleware/jwt-auth')
+const express = require('express');
+const pastReviewsService = require('./past-reviews-service');
+const checkUserIdExists = require('../middleware/user-id-exists/check-user-id-exists');
+const {requireAuth} = require('../middleware/jwt-auth');
+const xss = require('xss');
 
 const pastReviewsRouter = express.Router()
+
+const serializePastReviews = pastReview => ({
+    review_id: pastReview.review_id,
+    movie_id: pastReview.movie_id,
+    star_rating: pastReview.star_rating,
+    title: xss(pastReview.title),
+    director: xss(pastReview.director),
+    img: xss(pastReview.img),
+    release_year: xss(pastReview.release_year),
+    imdb_id: xss(pastReview.imdb_id),
+})
 
 pastReviewsRouter
     .route('/:user_id')
@@ -17,6 +29,7 @@ pastReviewsRouter
             user_id
         )
         .then(reviewData => {
+            reviewData.map(review => serializePastReviews(review))
             res.status(200).json({
                 reviewData
             })
